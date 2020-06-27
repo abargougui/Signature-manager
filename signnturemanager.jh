@@ -1,0 +1,40 @@
+/*
+ * This is a microservice blog sample with Gateway and two microservice applications
+ * This uses JHipster registry for service discovery and OIDC authentication
+ */
+
+application {
+  config {
+    baseName signaturemanager,
+    packageName fr.magnolia.dsi.signaturemanager,
+    applicationType microservice,
+    authenticationType jwt,
+    databaseType mongodb,
+    devDatabaseType mongodb,
+    prodDatabaseType mongodb,
+    enableHibernateCache false,
+    cacheProvider ehcache,
+    serverPort 8082,
+    serviceDiscoveryType eureka
+  }
+  entities SignatureRequest
+}
+
+entity SignatureRequest {
+  id String required,
+  customerId String required,
+  contractId String required,
+  transactionId String required,
+  requestDate LocalDate required,
+  fileUrl String,
+  signatureDate LocalDate,
+  status Status required
+}
+
+enum Status {PREPARING_REQUEST, SIGNATURE_REQUESTED, DOCUMENTS_SIGNED, SIGNATURE_REQUEST_CANCELLED, SIGNATURE_REQUEST_FAILED}
+
+dto SignatureRequest with mapstruct
+
+service SignatureRequest with serviceClass
+
+microservice SignatureRequest with signaturemanager

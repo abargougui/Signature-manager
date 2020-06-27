@@ -1,0 +1,16 @@
+version: '2'
+services:
+  signaturemanager-mongodb:
+    image: mongo:4.2.7
+    ports:
+      - '27017:27017'
+    command: mongos --configdb csvr/signaturemanager-mongodb-config --bind_ip 0.0.0.0
+  signaturemanager-mongodb-node:
+    build:
+      context: .
+      dockerfile: mongodb/MongoDB.Dockerfile
+    command: mongod --shardsvr --replSet rs1
+  signaturemanager-mongodb-config:
+    image: mongo:4.2.7
+    container_name: signaturemanager-mongodb-config
+    command: mongod --configsvr --dbpath /data/db --replSet csvr
